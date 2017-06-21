@@ -1,7 +1,7 @@
 @echo off
 
 rem ******  test config
-set device_emulator=0
+set device_emulator=1
 set useRx=0
 set useTx=1
 
@@ -16,7 +16,7 @@ set PacketInBuf=64
 set PacketGenType=1
 
 rem ****** rx/tx part dependent from device_emulator mode
-if %device_emulator%==0 (
+if %device_emulator%==1 (
 	set TxHostIP=%HostIP%
 	set TxPeer=%DeviceIP%
 	set RxHostIP=%HostIP%
