@@ -12,11 +12,6 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-HEADERS += \
-	   ../common/RawStreamTester.h
-
-SOURCES += \
-	   main.cpp            \
-	   ../common/RawStreamTester.cpp
-
+HEADERS += ../common/RawStreamTester.h
+SOURCES += main.cpp ../common/RawStreamTester.cpp
 LIBS += -lqudp
