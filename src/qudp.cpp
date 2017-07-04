@@ -363,7 +363,7 @@ bool TSocketRx::onExec()
                     #if defined(QUDP_PRINT_DEBUG_ERROR)
                         const unsigned TimeoutFactor = TSocket::TIMEOUT_DEBUG_PERIOD/rxSocketTimeout;
                         if((++mTimeoutCounter % TimeoutFactor) == 0) {
-                            qDebug() << "[WARN] [TSocketRx::onExec] timeout" << transfer.bundleId << TSocketWrapper::fullAddrTxt(mHostAddr,mHostPort);
+                            //qDebug() << "[WARN] [TSocketRx::onExec] timeout" << transfer.bundleId << TSocketWrapper::fullAddrTxt(mHostAddr,mHostPort);
                         }
                     #endif
                     transfer.status = UDP_LIB::SocketWaitTimeout;
