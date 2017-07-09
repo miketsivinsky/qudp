@@ -1,7 +1,5 @@
 TEMPLATE    = lib
 TARGET      = qudp
-//CONFIG     += console
-DEPENDPATH += .
 TOPDIR      = ..
 
 include($$TOPDIR/common.pri)
@@ -12,12 +10,17 @@ HEADERS    += \
                $$TOPDIR/include/SysUtils.h     \
                $$TOPDIR/include/SysUtilsQt.h   \
                $$TOPDIR/include/qudp_lib.h     \
+               $$TOPDIR/include/UDP_defs.h     \
                qudp.h
 SOURCES    += \
                qudp.cpp                        \
                qudp_lib.cpp
+
 QT         += testlib network
 
+DEFINES += ENA_FW_QT
+
 win32 {
-    LIBS += -lsetupapi -luuid -ladvapi32 -lws2_32
+    DEFINES += ENA_WIN_API
+    LIBS += -lws2_32
 }

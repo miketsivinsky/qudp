@@ -6,7 +6,7 @@
 
 //------------------------------------------------------------------------------
 // for TSocketTx::TSocketTx due to the QTBUG-30478 (https://bugreports.qt.io/browse/QTBUG-30478)
-#if defined(Q_OS_WIN)
+#if defined(Q_OS_WIN) && defined(ENA_WIN_API)
     #define WIN32_LEAN_AND_MEAN
     #include <windows.h>
     #include <winsock2.h>
@@ -363,7 +363,7 @@ bool TSocketRx::onExec()
                     #if defined(QUDP_PRINT_DEBUG_ERROR)
                         const unsigned TimeoutFactor = TSocket::TIMEOUT_DEBUG_PERIOD/rxSocketTimeout;
                         if((++mTimeoutCounter % TimeoutFactor) == 0) {
-                            qDebug() << "[WARN] [TSocketRx::onExec] timeout" << transfer.bundleId << TSocketWrapper::fullAddrTxt(mHostAddr,mHostPort);
+                            //qDebug() << "[WARN] [TSocketRx::onExec] timeout" << transfer.bundleId << TSocketWrapper::fullAddrTxt(mHostAddr,mHostPort);
                         }
                     #endif
                     transfer.status = UDP_LIB::SocketWaitTimeout;
@@ -472,13 +472,13 @@ bool TSocketTx::socketInit()
     #endif
 
     if(getSocketBufSize()) {
-        #if defined(Q_OS_WIN)
+        #if defined(Q_OS_WIN) && defined(ENA_WIN_API)
             int optValue = getSocketBufSize();
             int optLength = sizeof(optValue);
             qintptr hSocket = mSocket->socketDescriptor();
             ::setsockopt(hSocket,SOL_SOCKET,SO_SNDBUF,reinterpret_cast<char*>(&optValue),optLength);
         #else
-            getWrapper()->getSocket()->setSocketOption(QAbstractSocket::SendBufferSizeSocketOption,getSocketBufSize());
+            mSocket->setSocketOption(QAbstractSocket::SendBufferSizeSocketOption,getSocketBufSize());
         #endif
 
         #if defined(QUDP_PRINT_DEBUG_ERROR) || defined(QUDP_PRINT_DEBUG_INFO)
@@ -905,7 +905,7 @@ UDP_LIB::TStatus TSocketPool::submitTransfer(unsigned long hostAddr, unsigned ho
 }
 
 //------------------------------------------------------------------------------
-UDP_LIB::TStatus TSocketPool::getTransfer(unsigned long hostAddr, unsigned hostPort, UDP_LIB::TDirection dir, UDP_LIB::Transfer& transfer, DWORD timeout)
+UDP_LIB::TStatus TSocketPool::getTransfer(unsigned long hostAddr, unsigned hostPort, UDP_LIB::TDirection dir, UDP_LIB::Transfer& transfer, unsigned timeout)
 {
     #if defined(QUDP_THREAD_SAFE)
         TQtMutexGuard::TLocker lock(mInstanceGuard);

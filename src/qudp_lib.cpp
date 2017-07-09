@@ -45,7 +45,7 @@ namespace UDP_LIB
 
 	//------------------------------------------------------------------------------
 	QUDP_DLL_API UDP_LIB::TStatus getTransfer(unsigned long hostAddr, unsigned hostPort, UDP_LIB::TDirection dir, UDP_LIB::Transfer& transfer, unsigned timeout) {
-		return TSocketPool::getTransfer(hostAddr,hostPort,dir,transfer,static_cast<DWORD>(timeout));
+        return TSocketPool::getTransfer(hostAddr,hostPort,dir,transfer,static_cast<unsigned>(timeout));
 	}
 
 	//------------------------------------------------------------------------------
