@@ -29,7 +29,7 @@ const int SocketBufSize  = 8*1024*1024;
 const unsigned TypeInterval = 10000;
 
 //------------------------------------------------------------------------------
-const unsigned PrgParams = 7;
+const int PrgParams = 7;
 // argv[0] - program name
 // argv[1] - PacketNum
 // argv[2] - host IP
@@ -129,7 +129,7 @@ int main(int argc, char *argv[]) {
         printf("\n--------------------------------------------\n");
         printf("[INFO] buffers expected %20d\n",BufNum);
         printf("[INFO] buffers received %20d\n",rvdBuf);
-        printf("[INFO] bytes received   %20lld\n",rvdBytes);
+        printf("[INFO] bytes received   %20lu\n",rvdBytes);
         printf("[INFO] corrupted bufs   %20d\n",errCount);
         printf("[INFO] out of order     %20d\n",outOfOrderCount);
         printf("[INFO] elapsed time     %20.5fs\n",double(timeElapsed)/1e9);
