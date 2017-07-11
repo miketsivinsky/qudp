@@ -307,7 +307,11 @@ bool TSocketRx::socketInit()
             qDebug() << "[INFO] [TSocketRx::socketInit] [ReceiveBufferSizeSocketOption]" << TSocketWrapper::fullAddrTxt(mHostAddr,mHostPort) << socketBufSize << getSocketBufSize();
         #endif
         #if defined(QUDP_PRINT_DEBUG_ERROR)
+          #if defined(Q_OS_WIN)
             if(socketBufSize != getSocketBufSize()) {
+          #else
+            if(socketBufSize != getSocketBufSize()*2) {
+          #endif
                 qDebug() << "[ERROR] [TSocketRx::socketInit] [ReceiveBufferSizeSocketOption]" << TSocketWrapper::fullAddrTxt(mHostAddr,mHostPort) << socketBufSize << getSocketBufSize();
             }
         #endif
@@ -489,7 +493,11 @@ bool TSocketTx::socketInit()
             qDebug() << "[INFO] [TSocketTx] [SendBufferSizeSocketOption]" << TSocketWrapper::fullAddrTxt(mHostAddr,mHostPort) << socketBufSize << getSocketBufSize();
         #endif
         #if defined(QUDP_PRINT_DEBUG_ERROR)
+          #if defined(Q_OS_WIN)
             if(socketBufSize != getSocketBufSize()) {
+          #else
+            if(socketBufSize != getSocketBufSize()*2) {
+          #endif
                 qDebug() << "[ERROR] [TSocketTx] [SendBufferSizeSocketOption]" << TSocketWrapper::fullAddrTxt(mHostAddr,mHostPort) << socketBufSize << getSocketBufSize();
             }
         #endif
