@@ -64,13 +64,13 @@ TSocket::TSocket(unsigned long hostAddr, unsigned hostPort, const UDP_LIB::TPara
                                 mAppSem(),
                                 mSubmitQueue(),
                                 mReadyQueue(),
-                                mBufPool(params.numBundles),
                                 mColdStartCompleted(false),
                                 mColdStartCounter(0),
                                 #if defined(QUDP_PRINT_DEBUG_INFO)
                                     mNoTranserErrorCounter(0),
                                     mTimeoutCounter(0),
                                 #endif
+                                mBufPool(params.numBundles),
                                 mTransferPool(params.numBundles)
 {
   for(unsigned i = 0; i < getBundlesNum(); ++i) {
