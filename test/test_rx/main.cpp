@@ -129,7 +129,12 @@ int main(int argc, char *argv[]) {
         printf("\n--------------------------------------------\n");
         printf("[INFO] buffers expected %20d\n",BufNum);
         printf("[INFO] buffers received %20d\n",rvdBuf);
-        printf("[INFO] bytes received   %20lu\n",rvdBytes);
+        #if defined(Q_CC_GNU)
+            //printf("[INFO] bytes received   %20lu\n",rvdBytes);
+            printf("[INFO] bytes received   %20I64u\n",rvdBytes);
+        #else
+            printf("[INFO] bytes received   %20I64u\n",rvdBytes);
+        #endif
         printf("[INFO] corrupted bufs   %20d\n",errCount);
         printf("[INFO] out of order     %20d\n",outOfOrderCount);
         printf("[INFO] elapsed time     %20.5fs\n",double(timeElapsed)/1e9);
