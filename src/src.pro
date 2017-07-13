@@ -1,5 +1,6 @@
 TEMPLATE    = lib
 TARGET      = qudp
+CONFIG     += staticlib
 TOPDIR      = ..
 
 include($$TOPDIR/common.pri)
