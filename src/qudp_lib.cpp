@@ -3,8 +3,8 @@
 
 #define QUDP_LIB_EXPORT
 
-#include "QUDP_Lib.h"
-#include "QUDP.h"
+#include "qudp_lib.h"
+#include "qudp.h"
 
 namespace UDP_LIB
 {

@@ -11,10 +11,11 @@ libs
 # Files #
 ################################################################################
 *.qmake.stash
-/**/makefile*
+/**/Makefile*
 /**/*.suo
 /**/*.db
 /**/*.vcxproj.*
 *pro.user
 /**/_script/*.*
 !/**/_script/net_test.bat
+!/**/_script/net_test.sh

@@ -15,3 +15,8 @@ TEMPLATE = app
 HEADERS += ../common/RawStreamTester.h
 SOURCES += main.cpp  ../common/RawStreamTester.cpp
 LIBS += -lqudp
+
+win32 {
+    LIBS += -lws2_32
+}
+
