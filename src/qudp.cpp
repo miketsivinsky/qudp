@@ -54,6 +54,7 @@ static inline int qTimeout(unsigned timeout) {
 
 //------------------------------------------------------------------------------
 TSocket::TSocket(unsigned long hostAddr, unsigned hostPort, const UDP_LIB::TParams& params) :
+                                mStreamTester(),
                                 mExit(false),
                                 mStatus(UDP_LIB::NotInitialized),
                                 mHostAddr(hostAddr),
@@ -330,6 +331,7 @@ void TSocketRx::threadStart()
     TSocket::threadStart();
 }
 
+#define SLON0
 //------------------------------------------------------------------------------
 bool TSocketRx::onExec()
 {
@@ -362,6 +364,12 @@ bool TSocketRx::onExec()
                         transfer.status = UDP_LIB::XmitLenError;
                         break;
                     }
+                    #if defined(SLON0)
+                        unsigned errInCurrBuf = mStreamTester.checkBuf(reinterpret_cast<uint8_t*>(getPacketAddr(transfer,nPacket)),getPacketSize());
+                        if(errInCurrBuf) {
+                            qDebug() << "[ERROR][SocketRx-Test]" << errInCurrBuf << "errors in received buf";
+                        }
+                    #endif
                 } else {
                     // timeout
                     #if defined(QUDP_PRINT_DEBUG_ERROR)
@@ -394,6 +402,15 @@ bool TSocketRx::onExec()
                     mSubmitQueue.pop();
                 }
                 sendToReadyQueue(transfer);
+                #if defined(SLON0)
+                    if(tryXmit < 10) {
+                        //qDebug() << "tryXmit" << tryXmit;
+                    }
+                #endif
+                if(tryXmit == 0) {
+                    //return true;
+                }
+
             } else {
                 tryXmit = 0;
             }

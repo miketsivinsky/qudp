@@ -32,7 +32,7 @@ set TxDelay=0
 set TxPort=50012
 
 rem ****** rx part
-set RxBufNum=30000
+set RxBufNum=100000
 set RxPort=50012
 
 rem ********************************************

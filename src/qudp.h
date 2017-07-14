@@ -18,6 +18,8 @@
 #include "tqueue.h"
 #include "UDP_Defs.h"
 
+#include "RawStreamTester.h"
+
 #define QUDP_LIB_ADDR_FORMAT
 //#define QUDP_SO_REUSEADDR
 
@@ -62,6 +64,7 @@ class TSocket : public QThread
         typedef TQueue<UDP_LIB::Transfer,TQueueSl,TQtReadWriteLockGuard> TJobQueue;
 
         //---
+        TStreamTester      mStreamTester;
         volatile bool      mExit;        // TODO: check - is it need to do it atomic?
         UDP_LIB::TStatus   mStatus;
         unsigned long      mHostAddr;
@@ -115,7 +118,7 @@ class TSocketRx : public TSocket
     protected:
         static unsigned const  WAIT_THREAD_FINISH_RX = 2000;
         static unsigned const  SOCKET_TIMEOUT_RX     =  200;
-        static unsigned const  MAX_RCV_BUFFERS       = 1000;
+        static unsigned const  MAX_RCV_BUFFERS       = 10;
 
         virtual bool socketInit();
         virtual void threadStart();

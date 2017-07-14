@@ -101,6 +101,7 @@ int main(int argc, char *argv[]) {
         unsigned errCount = 0;
         unsigned outOfOrderCount = 0;
 
+        unsigned bufId = 0;
         for(unsigned nBuf = 0; nBuf < BufNum; ++nBuf) {
             status = UDP_LIB::getTransfer(HostAddr, Port, Direction, transfer);
             if(!typeInfo(nBuf,status,transfer))
@@ -108,13 +109,22 @@ int main(int argc, char *argv[]) {
             if(nBuf == 0) {
                 timer.start();
             }
+
+            #if 1
+                if(transfer.bundleId != bufId) {
+                    qDebug() << "[BUFID ERR]" << transfer.bundleId << bufId;
+                }
+                bufId = (transfer.bundleId + 1);
+                bufId = (bufId == BundleNum) ? 0 : bufId;
+            #endif
+
             ++rvdBuf;
             rvdBytes += transfer.length;
             if (PacketGenType) {
                 unsigned errInCurrBuf = streamChecker.checkBuf(transfer.buf, transfer.length);
                 errCount += errInCurrBuf;
                 if (errInCurrBuf) {
-                    printf("[ERROR] %6d errors in received buf\n", errInCurrBuf);
+                    //printf("[ERROR] %6d errors in received buf\n", errInCurrBuf);
                 }
             }
             status = UDP_LIB::submitTransfer(HostAddr,Port,Direction,transfer);
