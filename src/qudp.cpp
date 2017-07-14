@@ -394,6 +394,8 @@ bool TSocketRx::onExec()
                     mSubmitQueue.pop();
                 }
                 sendToReadyQueue(transfer);
+                if(tryXmit == 0)
+                    return true;
             } else {
                 tryXmit = 0;
             }

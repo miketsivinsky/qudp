@@ -30,11 +30,11 @@ fi
 
 #****** tx part
 TxBufNum=1010000
-TxDelay=3
+TxDelay=0
 TxPort=50012
 
 #****** rx part
-RxBufNum=1000000
+RxBufNum=100000
 RxPort=50012
 
 
