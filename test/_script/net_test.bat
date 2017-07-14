@@ -2,8 +2,8 @@
 
 rem ******  test config
 set device_emulator=1
-set useRx=0
-set useTx=1
+set useRx=1
+set useTx=0
 
 rem ****** IP list
 set LocalHost=127.0.0.1
@@ -32,7 +32,7 @@ set TxDelay=0
 set TxPort=50012
 
 rem ****** rx part
-set RxBufNum=100000
+set RxBufNum=30000
 set RxPort=50012
 
 rem ********************************************
