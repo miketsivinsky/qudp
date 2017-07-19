@@ -1,20 +1,21 @@
 TEMPLATE    = lib
 TARGET      = qudp
-CONFIG     += staticlib
-TOPDIR      = ..
 
-include($$TOPDIR/common.pri)
-include($$TOPDIR/build.pri)
+CONFIG     += staticlib
+
+PRJ_DIR      = ..
+
+include($${PRJ_DIR}/build.pri)
 
 HEADERS    += \
-               $$TOPDIR/include/tqueue.h       \
-               $$TOPDIR/include/SysUtils.h     \
-               $$TOPDIR/include/SysUtilsQt.h   \
-               $$TOPDIR/include/qudp_lib.h     \
-               $$TOPDIR/include/UDP_defs.h     \
+               $${INC_DIR}/tqueue.h       \
+               $${INC_DIR}/SysUtils.h     \
+               $${INC_DIR}/SysUtilsQt.h   \
+               $${INC_DIR}/qudp_lib.h     \
+               $${INC_DIR}/UDP_defs.h     \
                qudp.h
 SOURCES    += \
-               qudp.cpp                        \
+               qudp.cpp                   \
                qudp_lib.cpp
 
 QT         += testlib network
@@ -23,5 +24,5 @@ DEFINES += ENA_FW_QT
 
 win32 {
     DEFINES += ENA_WIN_API
-    LIBS += -lws2_32
+    #LIBS    += -lws2_32
 }

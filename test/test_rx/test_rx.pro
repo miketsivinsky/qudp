@@ -1,19 +1,22 @@
-QT       += core
-QT       += network
-QT       -= gui
+TEMPLATE  = app
+TARGET    = test_rx
 
-TOPDIR      = ../..
-include($$TOPDIR/common.pri)
-include($$TOPDIR/build.pri)
-
-TARGET = test_rx
 CONFIG   += console
 CONFIG   -= app_bundle
+QT       += core network
+QT       -= gui
 
-TEMPLATE = app
+PRJ_DIR   = ../..
 
-HEADERS += ../common/RawStreamTester.h
-SOURCES += main.cpp  ../common/RawStreamTester.cpp
+include($${PRJ_DIR}/build.pri)
+
+HEADERS += \
+           ../common/RawStreamTester.h
+
+SOURCES += \
+	     main.cpp \
+             ../common/RawStreamTester.cpp
+
 LIBS += -lqudp
 
 win32 {
