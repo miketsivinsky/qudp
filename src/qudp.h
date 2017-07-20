@@ -143,7 +143,7 @@ class TSocketTx : public TSocket
         static unsigned const  MAX_SENT_BUFFERS        = 1;
         static unsigned const  MAX_RETRY_PACKET_TX     = 200;
         QSemaphore   mTxSem;
-        quint64      mBytesSent;
+        qint64       mBytesSent;
 
         virtual bool socketInit();
         virtual void threadStart();

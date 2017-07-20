@@ -29,7 +29,7 @@ const int SocketBufSize  = 8*1024*1024;
 const unsigned TypeInterval = 10000;
 
 //------------------------------------------------------------------------------
-const unsigned PrgParams = 9;
+const int PrgParams = 9;
 // argv[0] - program name
 // argv[1] - PacketNum
 // argv[2] - host IP
@@ -135,7 +135,7 @@ int main(int argc, char *argv[]) {
             }
             ++sentBuf;
             sentBytes += transfer.length;
-            if(TxDelay) {
+            if(TxDelay && ((nBuf & 3) == 0)) {
                 QThread::msleep(TxDelay);
             }
         }
@@ -144,7 +144,11 @@ int main(int argc, char *argv[]) {
         //---
         printf("\n--------------------------------------------\n");
         printf("[INFO] buffers received %20d\n",sentBuf);
-        printf("[INFO] bytes received   %20lld\n",sentBytes);
+        #if defined(Q_CC_GNU)
+            printf("[INFO] bytes received   %20lu\n",sentBytes);
+        #else
+            printf("[INFO] bytes received   %20I64u\n",sentBytes);
+        #endif
         printf("[INFO] elapsed time     %20.5fs\n",double(timeElapsed)/1e9);
         printf("[INFO] transfer rate:   %20.1f MB/s\n",(((double)sentBytes)/timeElapsed)*1000.0);
         printf("[INFO] transfer rate:   %20.1f Mb/s\n",(((double)sentBytes*8)/timeElapsed)*1000.0);

@@ -1,19 +1,35 @@
-del Makefile.*
+@echo off
 
-del src\Makefile.*
-rd src\debug /S /Q 
-rd src\release /S /Q
-rd src\moc /S /Q
-rd src\x64 /S /Q
+set DISABLE_QMAKE_DEFAULT_BUILD=1
+set USE_VS_BUILD=0
 
-del test\test_rx\Makefile.*
-rd test\test_rx\debug /S /Q 
-rd test\test_rx\release /S /Q
-rd test\test_rx\moc /S /Q
-rd test\test_rx\x64 /S /Q
+if "%1"=="" (
+	set TOPDIR=.
+) else (
+	set TOPDIR=%1
+)
 
-del test\test_tx\Makefile.*
-rd test\test_tx\debug /S /Q 
-rd test\test_tx\release /S /Q
-rd test\test_tx\moc /S /Q
-rd test\test_tx\x64 /S /Q
+del %TOPDIR%\Makefile.*
+del %TOPDIR%\src\Makefile.*
+del %TOPDIR%\test\test_rx\Makefile.*
+del %TOPDIR%\test\test_tx\Makefile.*
+
+rd  %TOPDIR%\build /S /Q 
+rd  %TOPDIR%\bin /S /Q 
+
+if %DISABLE_QMAKE_DEFAULT_BUILD%==0 (
+	rd  %TOPDIR%\src\debug /S /Q 
+	rd  %TOPDIR%\src\release /S /Q
+	
+	rd  %TOPDIR%\test\test_rx\debug /S /Q 
+	rd  %TOPDIR%\test\test_rx\release /S /Q
+
+	rd  %TOPDIR%\test\test_tx\debug /S /Q 
+	rd  %TOPDIR%\test\test_tx\release /S /Q
+)
+
+if %USE_VS_BUILD%==1 (
+	rd  %TOPDIR%\src\x64 /S /Q
+	rd  %TOPDIR%\test\test_rx\x64 /S /Q
+	rd  %TOPDIR%\test\test_tx\x64 /S /Q
+)

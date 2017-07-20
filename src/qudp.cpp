@@ -64,13 +64,13 @@ TSocket::TSocket(unsigned long hostAddr, unsigned hostPort, const UDP_LIB::TPara
                                 mAppSem(),
                                 mSubmitQueue(),
                                 mReadyQueue(),
-                                mBufPool(params.numBundles),
                                 mColdStartCompleted(false),
                                 mColdStartCounter(0),
                                 #if defined(QUDP_PRINT_DEBUG_INFO)
                                     mNoTranserErrorCounter(0),
                                     mTimeoutCounter(0),
                                 #endif
+                                mBufPool(params.numBundles),
                                 mTransferPool(params.numBundles)
 {
   for(unsigned i = 0; i < getBundlesNum(); ++i) {
@@ -307,7 +307,11 @@ bool TSocketRx::socketInit()
             qDebug() << "[INFO] [TSocketRx::socketInit] [ReceiveBufferSizeSocketOption]" << TSocketWrapper::fullAddrTxt(mHostAddr,mHostPort) << socketBufSize << getSocketBufSize();
         #endif
         #if defined(QUDP_PRINT_DEBUG_ERROR)
+          #if defined(Q_OS_WIN)
             if(socketBufSize != getSocketBufSize()) {
+          #else
+            if(socketBufSize != getSocketBufSize()*2) {
+          #endif
                 qDebug() << "[ERROR] [TSocketRx::socketInit] [ReceiveBufferSizeSocketOption]" << TSocketWrapper::fullAddrTxt(mHostAddr,mHostPort) << socketBufSize << getSocketBufSize();
             }
         #endif
@@ -390,6 +394,8 @@ bool TSocketRx::onExec()
                     mSubmitQueue.pop();
                 }
                 sendToReadyQueue(transfer);
+                if(tryXmit == 0)
+                    return true;
             } else {
                 tryXmit = 0;
             }
@@ -489,7 +495,11 @@ bool TSocketTx::socketInit()
             qDebug() << "[INFO] [TSocketTx] [SendBufferSizeSocketOption]" << TSocketWrapper::fullAddrTxt(mHostAddr,mHostPort) << socketBufSize << getSocketBufSize();
         #endif
         #if defined(QUDP_PRINT_DEBUG_ERROR)
+          #if defined(Q_OS_WIN)
             if(socketBufSize != getSocketBufSize()) {
+          #else
+            if(socketBufSize != getSocketBufSize()*2) {
+          #endif
                 qDebug() << "[ERROR] [TSocketTx] [SendBufferSizeSocketOption]" << TSocketWrapper::fullAddrTxt(mHostAddr,mHostPort) << socketBufSize << getSocketBufSize();
             }
         #endif
