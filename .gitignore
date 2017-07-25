@@ -14,6 +14,8 @@ libs
 /**/*.suo
 /**/*.db
 /**/*.vcxproj.*
+/**/*.vcxproj
+/**/*.sln
 *pro.user
 /**/_script/*.*
 !/**/_script/net_test.bat
