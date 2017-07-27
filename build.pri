@@ -8,6 +8,11 @@ CONFIG  -= debug_and_release debug_and_release_target
 PRJ_DIR = $${PWD}
 
 #---
+if(equals(NO_DEBUG_INFO,1)) {
+	DEFINES  += QT_NO_DEBUG_OUTPUT
+}
+
+#---
 if(defined(QUDP_INC_DIR,var)) {
 	INC_DIR = $${QUDP_INC_DIR}
 } else {
