@@ -14,6 +14,12 @@ del %TOPDIR%\src\Makefile.*
 del %TOPDIR%\test\test_rx\Makefile.*
 del %TOPDIR%\test\test_tx\Makefile.*
 
+del %TOPDIR%\*.sln
+del %TOPDIR%\src\*.vcxproj.*
+del %TOPDIR%\test\test_rx\*.vcxproj.*
+del %TOPDIR%\test\test_tx\*.vcxproj.*
+
+
 rd  %TOPDIR%\build /S /Q 
 rd  %TOPDIR%\bin /S /Q 
 
