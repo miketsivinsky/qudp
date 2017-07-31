@@ -21,3 +21,4 @@ libs
 !/**/_script/net_test.bat
 !/**/_script/net_test.sh
 /**/*plugin_import.cpp
+clean
