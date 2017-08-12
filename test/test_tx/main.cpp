@@ -145,7 +145,8 @@ int main(int argc, char *argv[]) {
         printf("\n--------------------------------------------\n");
         printf("[INFO] buffers received %20d\n",sentBuf);
         #if defined(Q_CC_GNU)
-            printf("[INFO] bytes received   %20lu\n",sentBytes);
+            //printf("[INFO] bytes received   %20lu\n",sentBytes);
+            printf("[INFO] bytes received   %20llu\n",sentBytes);
         #else
             printf("[INFO] bytes received   %20I64u\n",sentBytes);
         #endif
