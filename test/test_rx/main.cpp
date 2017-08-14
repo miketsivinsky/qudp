@@ -130,8 +130,13 @@ int main(int argc, char *argv[]) {
         printf("[INFO] buffers expected %20d\n",BufNum);
         printf("[INFO] buffers received %20d\n",rvdBuf);
         #if defined(Q_CC_GNU)
-            //printf("[INFO] bytes received   %20lu\n",rvdBytes);
-            printf("[INFO] bytes received   %20llu\n",rvdBytes);
+            #if defined(Q_PROCESSOR_X86_64)
+                printf("[INFO] bytes received   %20lu\n",rvdBytes);
+            #elif defined(Q_PROCESSOR_X86_32)
+                printf("[INFO] bytes received   %20llu\n",rvdBytes);
+            #else
+                #warning "unknown processor type"
+            #endif
         #else
             printf("[INFO] bytes received   %20I64u\n",rvdBytes);
         #endif
