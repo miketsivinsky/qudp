@@ -143,12 +143,17 @@ int main(int argc, char *argv[]) {
 
         //---
         printf("\n--------------------------------------------\n");
-        printf("[INFO] buffers received %20d\n",sentBuf);
+        printf("[INFO] buffers sent %20d\n",sentBuf);
         #if defined(Q_CC_GNU)
-            //printf("[INFO] bytes received   %20lu\n",sentBytes);
-            printf("[INFO] bytes received   %20llu\n",sentBytes);
+            #if defined(Q_PROCESSOR_X86_64)
+                printf("[INFO] bytes sent   %20lu\n",sentBytes);
+            #elif defined(Q_PROCESSOR_X86_32)
+                printf("[INFO] bytes sent   %20llu\n",sentBytes);
+            #else
+                #warning "unknown processor type"
+            #endif
         #else
-            printf("[INFO] bytes received   %20I64u\n",sentBytes);
+            printf("[INFO] bytes sent   %20I64u\n",sentBytes);
         #endif
         printf("[INFO] elapsed time     %20.5fs\n",double(timeElapsed)/1e9);
         printf("[INFO] transfer rate:   %20.1f MB/s\n",(((double)sentBytes)/timeElapsed)*1000.0);
