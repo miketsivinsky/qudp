@@ -7,7 +7,7 @@ set useTx=1
 
 rem ****** IP list
 set LocalHost=127.0.0.1
-set HostIP=192.168.10.2
+set HostIP=192.168.10.3
 set DeviceIP=192.168.10.1
 
 rem ****** common part
