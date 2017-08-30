@@ -9,7 +9,7 @@ useTx=0
 
 #****** IP list
 LocalHost=127.0.0.1
-HostIP=192.168.10.2
+HostIP=192.168.10.3
 DeviceIP=192.168.10.1
 
 #****** common part
