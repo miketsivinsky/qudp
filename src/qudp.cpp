@@ -244,7 +244,7 @@ void TSocket::sendToReadyQueue(const UDP_LIB::Transfer& transfer, bool bufUsedFl
     }
     mReadyQueue.put(transfer);
     mAppSem.release();
-    if(mParams.onTransferReady) {
+    if(mParams.onTransferReady && !mExit) {
         UDP_LIB::TNetAddr hostAddr = { getHostAddr(), getHostPort() };
         UDP_LIB::TNetAddr peerAddr = { getPeerAddr(), getPeerPort() };
 
