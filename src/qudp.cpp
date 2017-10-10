@@ -147,7 +147,14 @@ void TSocket::run()
 bool TSocket::threadFinish(unsigned timeout)
 {
     mExit = true;
-    return wait(timeout);
+    if(getDir() == UDP_LIB::Receive) {
+        qDebug() << "TSocket::threadFinish, timeout:" << timeout << "(before wait)";
+    }
+    bool res = wait(timeout);
+    if(getDir() == UDP_LIB::Receive) {
+        qDebug() << "TSocket::threadFinish (after wait)";
+    }
+    return res;
 }
 
 //------------------------------------------------------------------------------
@@ -240,6 +247,8 @@ void TSocket::sendToReadyQueue(const UDP_LIB::Transfer& transfer, bool bufUsedFl
     if(mParams.onTransferReady) {
         UDP_LIB::TNetAddr hostAddr = { getHostAddr(), getHostPort() };
         UDP_LIB::TNetAddr peerAddr = { getPeerAddr(), getPeerPort() };
+
+        qDebug() << "TSocket::sendToReadyQueue; mExit:" << mExit;
         (*mParams.onTransferReady)(hostAddr, peerAddr, getDir());
     }
 }
@@ -259,10 +268,12 @@ TSocketRx::TSocketRx(unsigned long hostAddr, unsigned hostPort, const UDP_LIB::T
 //------------------------------------------------------------------------------
 TSocketRx::~TSocketRx()
 {
+    qDebug() << "~TSocketRx; threadId:" << currentThreadId();
+
     mDrvSem.release(getBundlesNum());
     mAppSem.release(getBundlesNum());
 
-    if(!threadFinish(WAIT_THREAD_FINISH_RX)) {
+    if(!threadFinish(5*WAIT_THREAD_FINISH_RX)) {
         #if defined(QUDP_PRINT_DEBUG_INFO)
             qDebug() << "[WARN] [TSocketRx::~TSocketRx] thread does not finished and terminated" << TSocketWrapper::fullAddrTxt(mHostAddr,mHostPort);
         #endif
@@ -339,6 +350,7 @@ bool TSocketRx::onExec()
     int rxSocketTimeout = (mParams.timeout == INFINITE) ? TSocketRx::SOCKET_TIMEOUT_RX : qTimeout(mParams.timeout);
 
     while(tryXmit--) {
+        qDebug() << "trace mDrvSem(before)";
         mDrvSem.acquire();
         xmitLength = 0;
         if(mSubmitQueue.readFront(transfer)) {
@@ -348,16 +360,21 @@ bool TSocketRx::onExec()
             #if defined(DEBUG_SOCKET_RX)
                 qDebug() << "[INFO] [TSocketRx::onExec] get(transfer):" << TSocketWrapper::fullAddrTxt(mHostAddr,mHostPort) << "threadId" << currentThreadId();
             #endif
+            qDebug() << "trace mDrvSem(after)";
             transfer.status = UDP_LIB::Ok; // ?! not need to set in there place preset in TSocket::submitTransfer
             for(auto nPacket = 0; nPacket < getPacketsNum(); ++nPacket) {
+                qDebug() << "trace waitForReadyRead(before)";
                 bool dataReady = mSocket->waitForReadyRead(rxSocketTimeout);
+                qDebug() << "trace waitForReadyRead(after)" << dataReady;
                 if(dataReady) {
+                    qDebug() << "trace readDatagram(before)";
                     qint64 packetLen = mSocket->readDatagram(getPacketAddr(transfer,nPacket),getPacketSize());
+                    qDebug() << "trace readDatagram(after)" << packetLen;
                     xmitLength += packetLen;
                     if((packetLen != getPacketSize()) && isStream()) {
                         // data len error - when socket Rx and isStream() == true
                         #if defined(QUDP_PRINT_DEBUG_ERROR)
-                            qDebug() << "[ERROR] [TSocketRx::onExec] packetLen error" << TSocketWrapper::fullAddrTxt(mHostAddr,mHostPort) << packetLen;
+                            //qDebug() << "[ERROR] [TSocketRx::onExec] packetLen error" << TSocketWrapper::fullAddrTxt(mHostAddr,mHostPort) << packetLen;
                         #endif
                         transfer.status = UDP_LIB::XmitLenError;
                         break;
@@ -367,7 +384,7 @@ bool TSocketRx::onExec()
                     #if defined(QUDP_PRINT_DEBUG_ERROR)
                         const unsigned TimeoutFactor = TSocket::TIMEOUT_DEBUG_PERIOD/rxSocketTimeout;
                         if((++mTimeoutCounter % TimeoutFactor) == 0) {
-                            //qDebug() << "[WARN] [TSocketRx::onExec] timeout" << transfer.bundleId << TSocketWrapper::fullAddrTxt(mHostAddr,mHostPort);
+                            qDebug() << "[WARN] [TSocketRx::onExec] timeout" << transfer.bundleId << TSocketWrapper::fullAddrTxt(mHostAddr,mHostPort);
                         }
                     #endif
                     transfer.status = UDP_LIB::SocketWaitTimeout;
@@ -386,6 +403,7 @@ bool TSocketRx::onExec()
             tryXmit = 0;
         } else {
             if(mSocket->hasPendingDatagrams() && mDrvSem.available()) {
+                qDebug() << "trace 1-1";
                 #if defined(DEBUG_SOCKET_RX)
                     qDebug() << "[INFO] [TSocketRx::onExec] transfer completed (retry)" << TSocketWrapper::fullAddrTxt(mHostAddr,mHostPort);
                 #endif
@@ -397,6 +415,7 @@ bool TSocketRx::onExec()
                 if(tryXmit == 0)
                     return true;
             } else {
+                qDebug() << "trace 1-2";
                 tryXmit = 0;
             }
         }
@@ -408,15 +427,22 @@ bool TSocketRx::onExec()
     #endif
     transfer.length = xmitLength;
     if(mParams.timeout != INFINITE) {
+        qDebug() << "trace 3-1";
         sendToReadyQueue(transfer);
     } else {
+        qDebug() << "trace 3-2";
         if(transfer.status != UDP_LIB::SocketWaitTimeout) {
+            qDebug() << "trace 3-2-1 (1)";
             mSubmitQueue.pop();
+            qDebug() << "trace 3-2-1 (2)";
             sendToReadyQueue(transfer);
+            qDebug() << "trace 3-2-1 (3)";
         } else {
+            qDebug() << "trace 3-2-2";
             mDrvSem.release();
         }
     }
+    //qDebug() << "trace exec-end" << currentThreadId();;
     return true;
 }
 
