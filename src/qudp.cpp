@@ -200,6 +200,10 @@ UDP_LIB::TStatus TSocket::submitTransfer(UDP_LIB::Transfer& transfer)
 //------------------------------------------------------------------------------
 UDP_LIB::TStatus TSocket::getTransfer(UDP_LIB::Transfer& transfer, unsigned timeout)
 {
+    if((getStatus() != UDP_LIB::Ok) && (getDir() == UDP_LIB::Transmit)) {
+        return getStatus();
+    }
+
     if(mAppSem.tryAcquire(1,qTimeout(timeout))) {
         if(mReadyQueue.get(transfer)) {
             return UDP_LIB::Ok;
